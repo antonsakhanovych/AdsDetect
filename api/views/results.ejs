@@ -10,16 +10,19 @@
 <body>
     <header>
 		<h1>Results</h1>
-        <a href="index.html">
+        <a href="/">
             <button type="home">home</button>
         </a>
 	</header>
 
 	<main>
-		<section class="container">
-			<img class="_1" src="https://i.pinimg.com/564x/72/5b/d7/725bd76ad382836264120d8c9c5dd3ec.jpg">
-            <img class="_2" src="https://i.pinimg.com/564x/72/5b/d7/725bd76ad382836264120d8c9c5dd3ec.jpg">
+		
+        <section class="container">
+            <% for(let i = 0; i < advertisements.length; i++){ %>
+			<img class="<%= advertisements[i].valid ? "_1" : "_2" %>" src="<%= advertisements[i].url %>">
+            <% } %>
 		</section>
+        
 	</main>
 </body>
 </html>
