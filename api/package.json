@@ -4,12 +4,13 @@
   "description": "api for adsdetect hackathon",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "prod": "node server.js"
   },
   "keywords": [
     "adsdetect"
   ],
-  "author": "Anton Sakhanovych, Arsen Rudnytskiy",
+  "author": "Anton Sakhanovych, Arsen Rudnytskiy, Oleksandr Milko",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
