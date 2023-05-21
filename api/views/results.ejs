@@ -18,9 +18,14 @@
 	<main>
 		
         <section class="container">
-            <% for(let i = 0; i < advertisements.length; i++){ %>
-			<img class="<%= advertisements[i].valid ? "_1" : "_2" %>" src="<%= advertisements[i].url %>">
-            <% } %>
+			<pre><code><%= JSON.stringify(advertisements, null, 2) %></code></pre>
+		</section>
+
+        <section class="container">
+			<% for (let index = 0; index < advertisements["ads"]["screenshot_ads"].length; index++) { %> 
+                <img src="<%= advertisements["ads"]["screenshot_ads"][index] %> ">
+                
+            <% } %> 
 		</section>
         
 	</main>

@@ -11,23 +11,28 @@ header {
 
 main {
     text-align: center;
+    display: block;
 }
 
 .container {
-    display: inline-block;
-    width: auto;
-    margin: 0 auto;
+    display: flex;
+    width: 50%;
+    margin: 3em auto;
     background-color: #fff;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    text-align: left;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 img {
     /* box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.3); */
     width: 240px;
     height: 240px;
-    margin-right: 20px;
+    margin: 10px;
+
 }
 
 ._1 {
