@@ -3,4 +3,5 @@
 <p> Go to the project folder</p>
 <p> run ./install.sh</p>
 <p> cd api </p>
+<p> npm run prod</p>
 
