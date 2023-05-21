@@ -155,4 +155,8 @@ def isPhishing(url):
     length = add_length(domain)
     subdomainsNumber = add_subdomains_number(domain)
     hasQualifiedTLD = add_hasQualifiedTLD(url)
-    return sgd_cls.predict([[hasSSL, length, subdomainsNumber, hasQualifiedTLD]])
+    return int(sgd_cls.predict([[hasSSL, length, subdomainsNumber, hasQualifiedTLD]])[0])
+
+if __name__ == "__main__":
+    url = sys.args[1]
+    print(isPhishing(url))
