@@ -1,6 +1,34 @@
 let express = require('express')
 let bodyParser = require('body-parser')
+const { exec, spawn } = require('child_process');
 const PORT = 3000
+
+
+function runPythonScript(scriptPath, args) {
+  return new Promise((resolve, reject) => {
+    const pythonProcess = spawn('python', [scriptPath, ...args]);
+
+    let scriptOutput = '';
+    let scriptError = '';
+
+    pythonProcess.stdout.on('data', (data) => {
+      scriptOutput += data.toString();
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+      scriptError += data.toString();
+    });
+
+    pythonProcess.on('close', (code) => {
+      if (code !== 0) {
+        reject(new Error(`Python script execution failed with code ${code}: ${scriptError}`));
+      } else {
+        resolve(scriptOutput);
+      }
+    });
+  });
+}
+
 
 let app = express()
 // Parser the body
@@ -15,23 +43,34 @@ app.get('/', (req, res) => {
   res.render('index')
 })
 
-// app.get('/results', (req, res) => {
-//   res.render('results')
-// })
 
-app.post('/results', (req, res) => {
-  let advertisements = {"url": "https://www.seiu1000.org/sites/main/files/main-images/camera_lense_0.jpeg",
-     "user-agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0",
+app.post('/results', async (req, res) => {
+  let url = req.body.url
+  var isPhish = await runPythonScript("../model/classifyDomain.py", [url])
+  let dest_urls = []
+  if(url.includes("google") && url.includes("search")){
+    const result = await runPythonScript("../model/ads_parser/googleads.py", [url])
+    var json = JSON.parse(result)
+    dest_urls.push(json)
+    for(let i = 0; i < json.length; i++){
+      let title = json[i]["title"]
+      let currUrl = json[i]["website_link"]
+      json[i]["isScam"] = parseInt(await runPythonScript("../model/classifyScam.py", [title]))
+      json[i]["isPhishing"] = parseInt(await runPythonScript("../model/classifyDomain.py", [currUrl]))
+    }
+    
+  }
+  
+  let advertisements = {"url": url,
+     "user-agent": req.headers['user-agent'],
      "context": "Kontekst przeglądarki",
+     "isPhishing": parseInt(isPhish, 10),
      "ads": {"name": "Unique name",
-      "destination_url":
-       ["https://tracking_url_1.pl",
-        "https://tracking_url_2.pl",
-        "https://firmaxyz.pl/produkt"],
+      "destination_url": dest_urls,
       "words": ["Firma Inwestcyjna", "Produkt"],
-      "screenshot_ads": ["https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg",
-       "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg", "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg", "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg", "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg",]
-    }}
+      "screenshot_ads": []
+     }}
+
   res.render('results', {advertisements})
 })
 

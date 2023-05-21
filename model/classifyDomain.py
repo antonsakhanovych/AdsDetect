@@ -3,7 +3,7 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import Levenshtein  # Install the Levenshtein package using pip
-
+import sys
 
 with open("../data/domainModel/domainPhishingPredictor/qualifiedTLDs.txt", "r") as file:
     TLDs = file.readlines()
@@ -158,5 +158,5 @@ def isPhishing(url):
     return int(sgd_cls.predict([[hasSSL, length, subdomainsNumber, hasQualifiedTLD]])[0])
 
 if __name__ == "__main__":
-    url = sys.args[1]
+    url = sys.argv[1]
     print(isPhishing(url))

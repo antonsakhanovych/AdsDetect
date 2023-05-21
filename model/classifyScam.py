@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
-
+import sys
 # 1 - spam, 0 - ad
 
 def replace_status(Status):
@@ -35,5 +35,9 @@ def isSpamOrAd(text):
     text = [text]
     test_cv = cv.transform(text)
     result = mnb_classifier.predict(test_cv)
-    if result == [0]: return "Ad"
-    else: return "Spam"
+    if result == [0]: return 0
+    else: return 1
+
+if __name__ == "__main__":
+    text = sys.argv[1]
+    print(isSpamOrAd(text))

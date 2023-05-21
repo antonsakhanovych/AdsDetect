@@ -3,10 +3,10 @@ import sys
 from bs4 import BeautifulSoup
 import requests, lxml, json
 
-request = sys.argv[1]
+#request = sys.argv[1]
+url = sys.argv[1]
 
 params = {
-    "q": request,
     "hl": "en",
     "gl": "us"
 }
@@ -16,7 +16,8 @@ headers = {
 }
 
 if __name__ == "__main__":
-    html = requests.get("https://www.google.com/search?", params=params, headers=headers)
+    #html = requests.get("https://www.google.com/search?", params=params, headers=headers)
+    html = requests.get(url, params=params, headers=headers)
     soup = BeautifulSoup(html.text, "lxml")
 
     ad_results = []
