@@ -135,15 +135,24 @@ good_urls = prepare_good_urls("../data/domainModel/domainPhishingPredictor/good_
 dataset = pd.concat([bad_urls, good_urls], ignore_index=True)
 add_features(dataset)
 corr = dataset.drop("Domain", axis=1).corr()
-print(corr["isPhishing"])
+# print(corr["isPhishing"])
 
 # X: features, y: target variable
 X = dataset.drop(["Domain", "isPhishing"], axis=1)
 y = dataset["isPhishing"]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-print(X_train)
+# print(X_train)
 sgd_cls = SGDClassifier(loss="log_loss", random_state=42)
 sgd_cls.fit(X_train, y_train)
 y_pred = sgd_cls.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
-print("Accuracy: ", accuracy)
+# print("Accuracy: ", accuracy)
+
+def isPhishing(url):
+    if "https://" in url: hasSSL = True
+    else: hasSSL = False
+    domain = remove_parameters(url)
+    length = add_length(domain)
+    subdomainsNumber = add_subdomains_number(domain)
+    hasQualifiedTLD = add_hasQualifiedTLD(url)
+    return sgd_cls.predict([[hasSSL, length, subdomainsNumber, hasQualifiedTLD]])
